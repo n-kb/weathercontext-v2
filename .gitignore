@@ -1,0 +1,9 @@
+venv
+temp
+__pycache__
+*.db
+*~lock*
+.cache
+.coverage
+*.zip
+*.ipynb
