@@ -1,5 +1,5 @@
 import MySQLdb
-import requests, io, json, boto3, os, csv, math, time
+import requests, json, os, math, time
 import datetime as dt
 import urllib.parse as urlparse
 import peewee
