@@ -20,7 +20,6 @@ class BaseModel(Model):
         database = db
 
 class CityTemp(BaseModel):
-    id = IntegerField(index=True, primary_key=True)
     station_id = IntegerField()
     city = CharField()
     temp = FloatField()
