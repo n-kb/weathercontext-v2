@@ -38,16 +38,10 @@ for index, city in cities.iterrows():
     json_data = json.loads(r.text)
     temp = json_data["main"]["temp"] - 272.15
 
-    try:
-        CityTemp.create(
-            city = city["City"],
-            station_id = city["station_id"].split(",")[0].replace("(",""),
-            date = dt.datetime.now(),
-            temp = temp
-        )
-        print ("\033[92mInserted data for %s.\033[0m" % city["City"])
-
-    except IntegrityError:
-        # Could not insert, probably bc it already exists
-        print ("\033[93mCould not insert data for %s.\033[0m" % city["City"])
-        pass
+    CityTemp.create(
+        city = city["City"],
+        station_id = city["station_id"].split(",")[0].replace("(",""),
+        date = dt.datetime.now(),
+        temp = temp
+    )
+    print ("\033[92mInserted data for %s.\033[0m" % city["City"])
