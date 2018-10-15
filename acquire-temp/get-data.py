@@ -20,13 +20,11 @@ class BaseModel(Model):
         database = db
 
 class CityTemp(BaseModel):
+    id = IntegerField(index=True, primary_key=True)
+    station_id = IntegerField()
     city = CharField()
     temp = FloatField()
-    date = DateField()
-    time = TimeField()
-
-    class Meta:
-        primary_key = CompositeKey('city', 'date', 'time')
+    date = DateTimeField()
 
 db.connect()
 db.create_tables([CityTemp], safe=True)
@@ -43,8 +41,8 @@ for index, city in cities.iterrows():
     try:
         CityTemp.create(
             city = city["City"],
-            date = dt.datetime.now().strftime("%Y-%m-%d"),
-            time = dt.datetime.now(),
+            station_id = city["station_id"].split(",")[0].replace("(",""),
+            date = dt.datetime.now(),
             temp = temp
         )
         print ("\033[92mInserted data for %s.\033[0m" % city["City"])

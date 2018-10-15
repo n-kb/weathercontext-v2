@@ -2,6 +2,7 @@ venv
 temp
 __pycache__
 *.db
+*.sql
 *~lock*
 .cache
 .coverage
