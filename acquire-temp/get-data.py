@@ -32,21 +32,19 @@ db.create_tables([CityTemp], safe=True)
 now = dt.datetime.utcnow()
 current_hour = now.hour
 
-if current_hour % 4 == 0:
+cities = pd.read_csv("data/cities.csv")
 
-	cities = pd.read_csv("data/cities.csv")
+for index, city in cities.iterrows():
+    url = "http://api.openweathermap.org/data/2.5/weather?q=%s,%s&APPID=%s" % (city["City"], city["Country"], os.environ["OWMKEY"])
+    r = requests.get(url)
+    time.sleep(.5)
+    json_data = json.loads(r.text)
+    temp = json_data["main"]["temp"] - 272.15
 
-	for index, city in cities.iterrows():
-	    url = "http://api.openweathermap.org/data/2.5/weather?q=%s,%s&APPID=%s" % (city["City"], city["Country"], os.environ["OWMKEY"])
-	    r = requests.get(url)
-	    time.sleep(.5)
-	    json_data = json.loads(r.text)
-	    temp = json_data["main"]["temp"] - 272.15
-
-	    CityTemp.create(
-	        city = city["City"],
-	        station_id = city["station_id"].split(",")[0].replace("(",""),
-	        date = dt.datetime.now(),
-	        temp = temp
-	    )
-	    print ("\033[92mInserted data for %s.\033[0m" % city["City"])
+    CityTemp.create(
+        city = city["City"],
+        station_id = city["station_id"].split(",")[0].replace("(",""),
+        date = dt.datetime.now(),
+        temp = temp
+    )
+    print ("\033[92mInserted data for %s.\033[0m" % city["City"])
