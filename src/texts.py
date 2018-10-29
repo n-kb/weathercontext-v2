@@ -61,7 +61,7 @@ texts = {
         "annotate_lastweek": "Température moyenne journalière ces 7 derniers jours",
         "source": "Source des données",
         "record": "nouveau record",
-        "answer": "@%s voilà le contexte météo pour %s ces 7 derniers jours! 🐕🐕"
+        "answer": "@%s Et voilà le contexte météo pour %s ces 7 derniers jours! 🐕🐕"
     },
     "de": {
         "title": "Historischer Kontext für Temperaturen in %s",
