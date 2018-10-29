@@ -9,7 +9,7 @@ import datetime as dt
 from scipy.interpolate import interp1d
 import matplotlib.dates as mdates
 from colour import Color
-import random, os
+import random, os, io
 import urllib.parse as urlparse
 import peewee
 from peewee import *
@@ -32,7 +32,7 @@ class City:
     title_font = {'fontproperties': font_manager.FontProperties(fname=serif_fontfile, size=15)
                   ,'color': font_color
                  }
-    subtitle_font = {'fontproperties': font_manager.FontProperties(fname=serif_fontfile, size=12)
+    comment_font = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=12)
                   ,'color': font_color
                  }
     label_font = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=10)
@@ -66,6 +66,7 @@ class City:
         self.name = name
         self.code = code
         self.lang = lang
+        self.absolute_min = 99
         self.station_name = station_name.title()
         self.makeFilename()
         
@@ -97,9 +98,18 @@ class City:
         
         ## Reduces size of plot to allow for text
         plt.subplots_adjust(top=0.84, bottom=0.10)
+
+        # Saves images to string
+        img_data = io.BytesIO()
+        plt.savefig(img_data, format='png')
+        img_data.seek(0)
+
+        plt.close()
+
+        return img_data
     
     def addTitle(self):
-        title = texts[self.lang]["title"] % (self.name, self.current_values[0])
+        comment = texts[self.lang]["comment"] % (self.name, self.current_values[0])
         
         hot_or_warm = texts[self.lang]["warm"]
         if self.current_values[0] > 25:
@@ -107,15 +117,15 @@ class City:
         diff = self.current_values[0] - self.avg_values[0]
         
         if diff > 5:
-            title += texts[self.lang]["very hot"] % hot_or_warm
+            comment += texts[self.lang]["very hot"] % hot_or_warm
         elif diff > 2:
-            title += texts[self.lang]["pretty hot"] % hot_or_warm
+            comment += texts[self.lang]["pretty hot"] % hot_or_warm
         elif diff > -2:
-            title += texts[self.lang]["average"]
+            comment += texts[self.lang]["average"]
         elif diff > -5:
-            title += texts[self.lang]["pretty cold"]
+            comment += texts[self.lang]["pretty cold"]
         else:
-            title += texts[self.lang]["very cold"]
+            comment += texts[self.lang]["very cold"]
         
         begin_end = texts[self.lang]["early"]
         if dt.datetime.now().day > 20:
@@ -123,9 +133,37 @@ class City:
         elif dt.datetime.now().day > 10:
             begin_end = texts[self.lang]["mid"]
         
-        title += texts[self.lang]["for month"] % (begin_end, texts[self.lang][dt.datetime.now().strftime("%b")])
+        comment += texts[self.lang]["for month"] % (begin_end, texts[self.lang][dt.datetime.now().strftime("%b")])
+
+        # Arrow only
+        # Only show the arrow if the temperature is below average
+        if self.current_values[0] < self.avg_values[0]:
+          offset_x = pd.Timedelta('6 hours')
+          offset_y = (- .3)
+          plt.annotate("",
+               xy=(pd.to_datetime('today') + offset_x, self.current_values[0] + offset_y),
+               xytext=(pd.to_datetime('today') + pd.Timedelta('7 hours'), self.absolute_min + 1),
+               horizontalalignment='right',
+               verticalalignment='center',
+               **self.comment_font,
+               arrowprops=dict(
+                arrowstyle="->",
+                edgecolor=self.font_color,
+                connectionstyle="arc3,rad=0.3"
+               )
+              )
+        # Text only
+        plt.annotate(comment,
+             xy=(pd.to_datetime('today') + pd.Timedelta('3 hours'), self.current_values[0] - .1),
+             xytext=(pd.to_datetime('today') + pd.Timedelta('6 hours'), self.absolute_min + 1),
+             horizontalalignment='right',
+             verticalalignment='center',
+             **self.comment_font
+            )
         
-        self.title = title
+        self.comment = comment
+
+        title = texts[self.lang]["title"] % self.name
 
         plt.figtext(.05,.9,title, **self.title_font)
     
@@ -239,6 +277,9 @@ class City:
         
         # Plots the historical values
         for index, row in day_values.iterrows():
+            # Checks for min
+            if row["TG"] < self.absolute_min:
+              self.absolute_min = row["TG"]
             color = Color(self.colors["darkblue"]).rgb
             self.ax.plot(day, row["TG"], lw=.5, color=color, alpha=.025,  marker="o")
         
