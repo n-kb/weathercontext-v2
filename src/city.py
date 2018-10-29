@@ -29,8 +29,8 @@ class City:
             "red": "#eb3721"}
     
     font_color = "#676767"
-    sans_fontfile = '../fonts/LiberationSans-Regular.ttf'
-    serif_fontfile = '../fonts/VeraSerif.ttf'
+    sans_fontfile = 'fonts/LiberationSans-Regular.ttf'
+    serif_fontfile = 'fonts/VeraSerif.ttf'
     title_font = {'fontproperties': font_manager.FontProperties(fname=serif_fontfile, size=15)
                   ,'color': font_color
                  }
