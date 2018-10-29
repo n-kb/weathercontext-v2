@@ -79,7 +79,7 @@ class City:
         self.filename = "TG_STAID%s%s.txt" % (zeroes, self.code)
         
     def loadTempFile(self):
-        self.df = pd.read_csv("../data/ECA_blend_tg/" + self.filename, sep=","
+        self.df = pd.read_csv("data/ECA_blend_tg/" + self.filename, sep=","
                               , header=15
                               , skipinitialspace=True
                               , parse_dates = ["DATE"]
