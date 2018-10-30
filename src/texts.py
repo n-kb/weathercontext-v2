@@ -65,7 +65,7 @@ texts = {
     },
     "de": {
         "title": "Historischer Kontext für Temperaturen in %s",
-        "comment": "Die Durchschnitttemperatur der letzten 24 Stunden in %s war %.1f°C,\n",
+        "comment": "Die Durchschnittstemperatur der letzten 24 Stunden in %s war %.1f°C,\n",
         "warm": "warm",
         "hot": "heiß",
         "very hot": "sehr %s",
@@ -89,8 +89,8 @@ texts = {
         "Oct": "Oktober",
         "Nov": "November",
         "Dec": "Dezember",
-        "annotate_avg": "%d-1999 Durchschnitttemperatur (%s Wetterstation)",
-        "annotate_lastweek": "Tägliche Durchschnitttemperatur der letzten 7 Tage",
+        "annotate_avg": "%d-1999 Durchschnittstemperatur (%s Wetterstation)",
+        "annotate_lastweek": "Tägliche Durchschnittstemperatur der letzten 7 Tage",
         "source": "Datenquellen",
         "record": "neuer Rekord",
         "answer": "@%s Hier ist der Wetterkontext für %s! 🐕🐕"
