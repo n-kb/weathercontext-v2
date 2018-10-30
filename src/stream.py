@@ -65,10 +65,9 @@ def sendTweet(city, username = None, reply_to = None):
     img_ids = []
 
     imagedata = city.defaultGraph().read()
-    status_text = city.comment
 
     if username == None:
-        status_text = title
+        status_text = city.comment
     else:
         status_text = texts[lang]["answer"] % (username, city.name)
 
