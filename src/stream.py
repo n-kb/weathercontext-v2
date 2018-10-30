@@ -64,12 +64,14 @@ def sendTweet(city, username = None, reply_to = None):
     # List of image ids
     img_ids = []
 
-    imagedata = city.defaultGraph().read()
-
-    if username == None:
-        status_text = city.comment
-    else:
-        status_text = texts[lang]["answer"] % (username, city.name)
+    try:
+        imagedata = city.defaultGraph().read()
+        if username == None:
+            status_text = city.comment
+        else:
+            status_text = texts[lang]["answer"] % (username, city.name)
+    except KeyError:
+        status_text = "Snap, an error occured! Let's hope my master @nicolaskb can fix it quickly!"
 
     auth = OAuth(os.environ["ACCESS_TOKEN"], os.environ["ACCESS_SECRET"], os.environ["TWITTER_KEY"], os.environ["TWITTER_SECRET"])
 

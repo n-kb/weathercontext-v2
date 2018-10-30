@@ -68,6 +68,8 @@ class City:
         self.name = name
         self.code = code
         self.lang = lang
+        if (self.lang == ""):
+          self.lang = "en"
         self.absolute_min = 99
         self.station_name = station_name.title()
         self.makeFilename()
