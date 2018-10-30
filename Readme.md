@@ -12,11 +12,11 @@ Some keywords, such as asking for the city in a different language, lets you cha
 
 Examples of requests:
 
-- _"Paris"_ ➡️ Shows temperature in _Paris_, in _French_
-- "_Paris, doggy_" ➡️ Shows temperatures in Paris, in _English_
-- _"Berlin mon chien"_ ➡️ Shows temperature in _Berlin_, in _French_
-- "_Wrocław_" ➡️ Shows temperatures in _Wrocław_, in _English_
-- "_Breslau_" ➡️ Shows temperatures in _Wrocław_, in _German_
+- _"Paris"_ -> Shows temperature in _Paris_, in _French_
+- "_Paris, doggy_" -> Shows temperatures in Paris, in _English_
+- _"Berlin mon chien"_ -> Shows temperature in _Berlin_, in _French_
+- "_Wrocław_" -> Shows temperatures in _Wrocław_, in _English_
+- "_Breslau_" -> Shows temperatures in _Wrocław_, in _German_
 
 ## Coverage
 
@@ -103,13 +103,15 @@ Examples of requests:
 
 ## Data
 
-Historical data comes from European Climate Assessment & Dataset (ECA&D), who very nicely put [datasets of daily weather data](https://www.ecad.eu//dailydata/index.php) online.
+Historical data comes from European Climate Assessment & Dataset (ECA&D), who very nicely put [datasets of daily weather data](https://www.ecad.eu//dailydata/index.php) online. Suspicious values (as defined by ECA&D) are not taken into account.
 
 Data for the current week comes from [openweathermap](http://openweathermap.org).
 
 Data for the current week shows average temperature over a 24-hour period based on hourly data. If you ask for data at 15:00, for instance, the mean temperature for the day will be the average of the hourly values between 15:00 on the previous day and 15:00 on the current day. Do note that this is not the same methodology as the ECA&D dataset mentioned above, which uses midnight-to-midnight means.
 
 ## Localization
+
+To add a language, complete the fields in `src/texts.py` and add a column with the city names in your language in `data/cities.csv`
 
 ## References
 
