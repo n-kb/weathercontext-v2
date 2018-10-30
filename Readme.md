@@ -1,5 +1,7 @@
 # Context for my weather
 
+![The dogbot in action](images/screenshot.png)
+
 ## Rationale
 
 I wanted to know how abnormal the current temperature was, based on 20th-century averages, so I built this dogbot, which does just that. A [first version](https://github.com/n-kb/weathercontext) used reanalysis data ; I wanted to switch to station data for easier comparison.
