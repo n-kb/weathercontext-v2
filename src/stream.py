@@ -7,9 +7,9 @@ import os, requests, json
 cities = pd.read_csv("data/cities.csv")
 cities.fillna("", inplace = True)
 please_words = {
-    "en": ["please", "pls"],
-    "fr": ["stp", "svp", "plaît", "steup"],
-    "de": ["bitte"]
+    "en": ["please", "pls", "dog", "doggy"],
+    "fr": ["stp", "svp", "plaît", "steup", "chien"],
+    "de": ["bitte", "hund", "hündchen", "hundchen"]
 }
 
 def getCityFromString(s):
