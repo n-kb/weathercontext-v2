@@ -20,6 +20,8 @@ Examples of requests:
 
 ## Coverage
 
+![Map of cities covered](images/cities.png)
+
 78 cities are covered. From North to South:
 
 - Helsinki
