@@ -61,6 +61,8 @@ def getCityFromString(s):
 
 def sendTweet(city, username = None, reply_to = None):
 
+    status_text = ""
+
     # List of image ids
     img_ids = []
 
@@ -71,7 +73,8 @@ def sendTweet(city, username = None, reply_to = None):
         else:
             status_text = texts[lang]["answer"] % (username, city.name)
     except KeyError:
-        status_text = "@%s Snap, an error occured! Let's hope my master @nicolaskb can fix it quickly!" % username
+        if status_text == "":
+            status_text = "@%s Snap, an error occured! Let's hope my master @nicolaskb can fix it quickly!" % username
 
     auth = OAuth(os.environ["ACCESS_TOKEN"], os.environ["ACCESS_SECRET"], os.environ["TWITTER_KEY"], os.environ["TWITTER_SECRET"])
 
