@@ -25,7 +25,7 @@ def test_varsovie():
   assert (city_name == "Varsovie" and lang == "fr" and station_id == "209")
   city = City(city_name, station_id, station_name, lang)
   img = city.defaultGraph()
-  with open("varsovie.png", "wb") as f: 
+  with open("tests/varsovie.png", "wb") as f: 
     f.write(img.read()) 
     f.close()
 
@@ -34,7 +34,7 @@ def test_zarago():
   assert (city_name == "Zaragoza" and lang == "en" and station_id == "238")
   city = City(city_name, station_id, station_name, lang)
   img = city.defaultGraph()
-  with open("zaragoza.png", "wb") as f: 
+  with open("tests/zaragoza.png", "wb") as f: 
     f.write(img.read()) 
     f.close()
 
@@ -43,7 +43,7 @@ def test_plama():
   assert (city_name == "Palma de Mallorca" and lang == "de" and station_id == "3918")
   city = City(city_name, station_id, station_name, lang)
   img = city.defaultGraph()
-  with open("parlma.png", "wb") as f: 
+  with open("tests/parlma.png", "wb") as f: 
     f.write(img.read()) 
     f.close()
 
@@ -56,6 +56,6 @@ def test_koeln():
   assert (city_name == "Köln" and lang == "de" and station_id == "4298")
   city = City(city_name, station_id, station_name, lang)
   img = city.defaultGraph()
-  with open("cologne.png", "wb") as f: 
+  with open("tests/cologne.png", "wb") as f: 
     f.write(img.read()) 
     f.close()

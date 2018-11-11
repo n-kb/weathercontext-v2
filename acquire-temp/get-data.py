@@ -37,7 +37,7 @@ cities = pd.read_csv("data/cities.csv")
 for index, city in cities.iterrows():
     url = "http://api.openweathermap.org/data/2.5/weather?q=%s,%s&APPID=%s" % (city["City"], city["Country"], os.environ["OWMKEY"])
     r = requests.get(url)
-    time.sleep(.5)
+    time.sleep(2)
     json_data = json.loads(r.text)
     temp = json_data["main"]["temp"] - 272.15
 
