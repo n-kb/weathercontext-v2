@@ -39,12 +39,16 @@ for index, city in cities.iterrows():
     r = requests.get(url)
     time.sleep(2)
     json_data = json.loads(r.text)
-    temp = json_data["main"]["temp"] - 272.15
+    try:
+        temp = json_data["main"]["temp"] - 272.15
 
-    CityTemp.create(
-        city = city["City"],
-        station_id = city["station_id"].split(",")[0].replace("(",""),
-        date = dt.datetime.now(),
-        temp = temp
-    )
-    print ("\033[92mInserted data for %s.\033[0m" % city["City"])
+        CityTemp.create(
+            city = city["City"],
+            station_id = city["station_id"].split(",")[0].replace("(",""),
+            date = dt.datetime.now(),
+            temp = temp
+        )
+        print ("\033[92mInserted data for %s.\033[0m" % city["City"])
+    except KeyError:
+        print ("\033[93mProblem with %s. Data not inserted\033[0m" % city["City"])
+        pass
