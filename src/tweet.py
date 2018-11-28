@@ -12,12 +12,12 @@ def tweetCity():
     if current_hour == 11:
         city = City("Berlin", "4563", "Berlin-Mitte", "de")
         sendTweet(city)
-    elif current_hour == 15:
-        city = City("Paris", "11249", "Orly", "fr")
-        sendTweet(city)
-    elif current_hour == 19:
-        city = City("London", "1859", "Hampstead", "en")
-        sendTweet(city)
+#    elif current_hour == 15:
+#        city = City("Paris", "11249", "Orly", "fr")
+#        sendTweet(city)
+#    elif current_hour == 19:
+#        city = City("London", "1859", "Hampstead", "en")
+#        sendTweet(city)
 
     return "OK"
 
