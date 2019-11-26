@@ -34,6 +34,10 @@ current_hour = now.hour
 
 cities = pd.read_csv("data/cities.csv")
 
+# Removes old rows
+CityTemp.delete().where(CityTemp.date < dt.datetime.now() - dt.timedelta(days=10)).execute()
+db.execute_sql("optimize table CityTemp;")
+
 for index, city in cities.iterrows():
     url = "http://api.openweathermap.org/data/2.5/weather?q=%s,%s&APPID=%s" % (city["City"], city["Country"], os.environ["OWMKEY"])
     r = requests.get(url)
