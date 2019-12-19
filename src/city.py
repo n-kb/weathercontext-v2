@@ -34,8 +34,9 @@ class City:
     title_font = {'fontproperties': font_manager.FontProperties(fname=serif_fontfile, size=15)
                   ,'color': font_color
                  }
-    comment_font = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=12)
+    comment_font = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=14)
                   ,'color': font_color
+                  , 'weight': 'bold'
                  }
     label_font = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=10)
                  ,'color': font_color
@@ -45,9 +46,9 @@ class City:
                  ,'color': colors["red"]
                  , 'weight': 'bold'
                  }
-    label_avg = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=12)
-                 ,'color': colors["darkblue"]
-                 , 'weight': 'bold'
+    expl_sentences = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=9)
+                 ,'color': "white"
+                 , 'weight': 'normal'
                  }
     label_current = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=12)
                  ,'color': colors["red"]
@@ -55,7 +56,7 @@ class City:
                  }
     
     label_current_small = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=10)
-                 ,'color': colors["lightblue"]
+                 ,'color': colors["darkblue"]
                  }
 
     smaller_font = {'fontproperties': font_manager.FontProperties(fname=sans_fontfile, size=9)
@@ -120,7 +121,9 @@ class City:
             hot_or_warm = texts[self.lang]["hot"]
         diff = self.current_values[0] - self.avg_values[0]
         
-        if diff > 5:
+        if diff > 8:
+            comment += texts[self.lang]["extremely hot"] % hot_or_warm
+        elif diff > 5:
             comment += texts[self.lang]["very hot"] % hot_or_warm
         elif diff > 2:
             comment += texts[self.lang]["pretty hot"] % hot_or_warm
@@ -139,29 +142,13 @@ class City:
         
         comment += texts[self.lang]["for month"] % (begin_end, texts[self.lang][dt.datetime.now().strftime("%b")])
 
-        # Arrow only
-        # Only show the arrow if the temperature is below average
-        if self.current_values[0] < self.avg_values[0]:
-          offset_x = pd.Timedelta('6 hours')
-          offset_y = (- .3)
-          plt.annotate("",
-               xy=(pd.to_datetime('today') + offset_x, self.current_values[0] + offset_y),
-               xytext=(pd.to_datetime('today') + pd.Timedelta('7 hours'), self.absolute_min + 1),
-               horizontalalignment='right',
-               verticalalignment='center',
-               **self.comment_font,
-               arrowprops=dict(
-                arrowstyle="->",
-                edgecolor=self.font_color,
-                connectionstyle="arc3,rad=0.3"
-               )
-              )
-        # Text only
+        # Text "Pretty worm for mid december"
         plt.annotate(comment,
-             xy=(pd.to_datetime('today') + pd.Timedelta('3 hours'), self.current_values[0] - .1),
-             xytext=(pd.to_datetime('today') + pd.Timedelta('6 hours'), self.absolute_min + 1),
-             horizontalalignment='right',
+             xy=(pd.to_datetime('today') - pd.Timedelta('%d hours' % ((int(self.days_to_show) * 24) / 2 - 12)), self.current_values[0] - .1),
+             xytext=(pd.to_datetime('today') - pd.Timedelta('%d hours' % ((int(self.days_to_show) * 24) / 2 - 12)), self.absolute_min + 1),
+             horizontalalignment='center',
              verticalalignment='center',
+             bbox=dict(facecolor="white", edgecolor=self.colors["yellow"], alpha=1),
              **self.comment_font
             )
         
@@ -182,32 +169,62 @@ class City:
              **self.label_current
             )
         
-        # Last avg temperature
-        todays_text = "%.1f°C" % self.avg_values[0]
-        plt.annotate(todays_text,
-             xy=(pd.to_datetime('today'), self.avg_values[0]),
-             xytext=(pd.to_datetime('today') + pd.Timedelta('3 hours'), self.avg_values[0]),
+        # Sentence for half
+        plt.annotate(texts[self.lang]["annotate_half"] % (self.first_year),
+             xy=(pd.to_datetime('today') - pd.Timedelta('%d hours' % (int(self.days_to_show) * 24 - 36)), self.avg_values[-1]),
+             xytext=(pd.to_datetime('today') - pd.Timedelta('%d hours' % (int(self.days_to_show) * 24 - 36)), self.avg_values[-1]),
+             bbox=dict(facecolor='white', edgecolor='none', alpha=0),
              horizontalalignment='left',
              verticalalignment='center',
-             **self.label_avg
+             **self.expl_sentences
+            )
+
+        # Sentence for 90p
+        plt.annotate(texts[self.lang]["annotate_90"],
+             xy=(pd.to_datetime('today') - pd.Timedelta('%d hours' % (int(self.days_to_show) * 24 - 36)), self.lower_90_values[-1]),
+             xytext=(pd.to_datetime('today') - pd.Timedelta('%d hours' % (int(self.days_to_show) * 24 - 36)), self.lower_90_values[-1]),
+             bbox=dict(facecolor=self.colors["lightblue"], edgecolor='none', alpha=.7),
+             horizontalalignment='left',
+             verticalalignment='center',
+             **self.expl_sentences
+            )
+
+        # Last 50p upper temperature
+        todays_text = "%.1f°C" % self.upper_50_values[0]
+        plt.annotate(todays_text,
+             xy=(pd.to_datetime('today'), self.upper_50_values[0]),
+             xytext=(pd.to_datetime('today') + pd.Timedelta('3 hours'), self.upper_50_values[0]),
+             horizontalalignment='left',
+             verticalalignment='center',
+             **self.label_current_small
+            )
+
+        # Last 50p lower temperature
+        todays_text = "%.1f°C" % self.lower_50_values[0]
+        plt.annotate(todays_text,
+             xy=(pd.to_datetime('today'), self.lower_50_values[0]),
+             xytext=(pd.to_datetime('today') + pd.Timedelta('3 hours'), self.lower_50_values[0]),
+             horizontalalignment='left',
+             verticalalignment='center',
+             **self.label_current_small
             )
         
         # Line label averages
-        plt.annotate(texts[self.lang]["annotate_avg"] % (self.first_year, self.station_name),
-             xy=(pd.to_datetime('today') - pd.Timedelta('%d days' % (int(self.days_to_show) - 1)), self.avg_values[-1]),
-             xytext=(pd.to_datetime('today') - pd.Timedelta('%d days' % (int(self.days_to_show) - 1)), self.avg_values[-1] - 2),
-             bbox=dict(facecolor='white', edgecolor='none', alpha=.7),
-             horizontalalignment='left',
-             verticalalignment='center',
-             **self.label_avg
-            )
+        # plt.annotate(texts[self.lang]["annotate_avg"] % (self.first_year, self.station_name),
+        #      xy=(pd.to_datetime('today') - pd.Timedelta('%d days' % (int(self.days_to_show) - 1)), self.avg_values[-1]),
+        #      xytext=(pd.to_datetime('today') - pd.Timedelta('%d days' % (int(self.days_to_show) - 1)), self.avg_values[-1] - 2),
+        #      bbox=dict(facecolor='white', edgecolor='none', alpha=.7),
+        #      horizontalalignment='left',
+        #      verticalalignment='center',
+        #      **self.label_avg
+        #     )
         
         # Checks the height of the last current temp in order to position the current temp label
         offset = 2
         if self.current_values[0] >= max(self.current_values) - 1:
             offset = -1
         
-        # Line label current temps
+        # Line label "Average daily temp for the last 7 days"
         plt.annotate(texts[self.lang]["annotate_lastweek"],
              xy=(pd.to_datetime('today'), self.current_values[0]),
              xytext=(pd.to_datetime('today'), self.current_values[0] + offset),
@@ -244,6 +261,10 @@ class City:
     def getValuesForLastWeek(self):
         today = pd.to_datetime('today')
         days = []
+        self.lower_90_values = []
+        self.upper_90_values = []
+        self.lower_50_values = []
+        self.upper_50_values = []
         self.avg_values = []
         self.max_values = []
         self.getCurrentYearsValues()
@@ -251,7 +272,11 @@ class City:
         for day in range(0,self.days_to_show):
             day = today - pd.Timedelta(str(day) + ' days')
             days.append(day)
-            avg_value, max_value = self.getValuesForDay(day)
+            lower_90, upper_90, lower_50, upper_50, avg_value, max_value = self.getValuesForDay(day)
+            self.lower_90_values.append(lower_90)
+            self.upper_90_values.append(upper_90)
+            self.lower_50_values.append(lower_50)
+            self.upper_50_values.append(upper_50)
             self.avg_values.append(avg_value)
             self.max_values.append(max_value)
             
@@ -266,9 +291,19 @@ class City:
                      **self.label_current_small
                     )
         
+        # Fill area for 90% of the days
+        self.ax.fill_between(days, self.lower_90_values, self.upper_90_values, color=self.colors["lightblue"], alpha=1)
+
+        # Fill area for 50% of the days
+        self.ax.fill_between(days, self.lower_50_values, self.upper_50_values, color=self.colors["darkblue"], alpha=1)
+        self.ax.plot(days, self.lower_50_values, lw=1, color="white", alpha=.7)
+        self.ax.plot(days, self.upper_50_values, lw=1, color="white", alpha=.7)
+
         # Plots the averages
-        self.ax.plot(days, self.avg_values, lw=1, color=self.colors["darkblue"])
+        # self.ax.plot(days, self.avg_values, lw=1, color="white", alpha=.5)
+        
         # Plots the current week
+        self.ax.plot(days, self.current_values, lw=2.5, color="white", marker="o")
         self.ax.plot(days, self.current_values, lw=1, color=self.colors["red"], marker="o")
     
     def getValuesForDay(self, day):
@@ -278,6 +313,10 @@ class City:
         # Computes 20th century average
         day_values_20c = day_values.loc[day_values["DATE"].dt.year < 2000]
         avg_20c = day_values_20c["TG"].mean()
+        lower_90 = day_values_20c["TG"].quantile(0.05)
+        lower_50 = day_values_20c["TG"].quantile(0.25)
+        upper_50 = day_values_20c["TG"].quantile(0.75)
+        upper_90 = day_values_20c["TG"].quantile(0.95)
         
         # Plots the historical values
         for index, row in day_values.iterrows():
@@ -285,9 +324,9 @@ class City:
             if row["TG"] < self.absolute_min:
               self.absolute_min = row["TG"]
             color = Color(self.colors["darkblue"]).rgb
-            self.ax.plot(day, row["TG"], lw=.5, color=color, alpha=.025,  marker="o")
+            self.ax.plot(day, row["TG"], lw=.5, color=color, alpha=0,  marker="o")
         
-        return avg_20c, day_values["TG"].max()
+        return lower_90, upper_90, lower_50, upper_50, avg_20c, day_values["TG"].max()
     
     def blankGraph(self):
         self.fig, self.ax = plt.subplots(1, 1, figsize=(12, 6))
@@ -318,6 +357,8 @@ class City:
 
         # Set units for yaxis
         self.ax.yaxis.set_major_formatter(mticker.FormatStrFormatter('%d°C'))
+
+        self.ax.margins(x=0)
     
     def dbInit(self):
         if 'CLEARDB_DATABASE_URL' in os.environ:

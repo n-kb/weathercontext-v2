@@ -29,6 +29,15 @@ def test_varsovie():
     f.write(img.read()) 
     f.close()
 
+def test_berlin():
+  city_name, station_id, station_name, lang = getCityFromString("Berlin")
+  assert (city_name == "Berlin" and lang == "de" and station_id == "4563")
+  city = City(city_name, station_id, station_name, lang)
+  img = city.defaultGraph()
+  with open("tests/berlin.png", "wb") as f: 
+    f.write(img.read()) 
+    f.close()
+
 def test_zarago():
   city_name, station_id, station_name, lang = getCityFromString("Zaragoza please")
   assert (city_name == "Zaragoza" and lang == "en" and station_id == "238")
